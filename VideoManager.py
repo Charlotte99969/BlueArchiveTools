@@ -34,7 +34,7 @@ class VideoManager:
                 character_name = ImageManager.extract_character_name(frame)  # 提取腳色名稱的方法需自行實現
                 # print(character_name)
                 if (character_name not in characters):
-                    characters.append(character_name)                
+                    characters.append(character_name)
                     frame_filename = os.path.join(self.output_directory, f"{character_name}.jpg")
                     cv2.imwrite(frame_filename, frame)
 

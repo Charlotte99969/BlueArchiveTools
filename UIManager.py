@@ -5,13 +5,13 @@ from tkinter import ttk
 from time import sleep
 
 from VideoManager import VideoManager
-from ImageManager import ImageManager
+from CharacterManager import CharacterManager
 
 class UIManager:
     def __init__(self, root):
         self.root = root
         self.video_manager = VideoManager()
-        self.image_manager = ImageManager()
+        self.character_manager = CharacterManager()
         self.root.title("蔚藍檔案腳色練度")
 
         # 創建UI元件
@@ -19,6 +19,9 @@ class UIManager:
         self.select_button.pack(pady=10)
 
         self.process_button = tk.Button(root, text="處理影片", command=self.start_processing)
+        self.process_button.pack(pady=10)
+
+        self.process_button = tk.Button(root, text="匯出腳色練度", command=self.export_characters_data)
         self.process_button.pack(pady=10)
 
         # 初始化進度條
@@ -35,10 +38,19 @@ class UIManager:
             # 使用多執行緒處理影格切分和圖片過濾
             processing_thread = threading.Thread(target=self.video_manager.process_video_frames)
             processing_thread.start()
-            
+
             # 使用多執行緒更新共用進度條
             update_progress_thread = threading.Thread(target=self.update_progress, args=(self.video_manager,))
             update_progress_thread.start()
+
+    def export_characters_data(self):
+        # 使用多執行緒處理影格切分和圖片過濾
+        processing_thread = threading.Thread(target=self.character_manager.export_characters_data)
+        processing_thread.start()
+
+        # 使用多執行緒更新共用進度條
+        update_progress_thread = threading.Thread(target=self.update_progress, args=(self.character_manager,))
+        update_progress_thread.start()
 
     def update_progress(self, manager):
         while True:
@@ -50,11 +62,8 @@ class UIManager:
                 progress_value = (manager.current_progress / manager.total_progress) * 100
                 self.progress["value"] = progress_value
                 # print(f"Progress: {progress_value:.2f}%")
-            
+
             sleep(0.1)
 
     def run(self):
         self.root.mainloop()
-
-
-           
