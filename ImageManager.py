@@ -2,6 +2,7 @@ import cv2
 import pytesseract
 import numpy as np
 
+import matplotlib.pyplot as plt
 from skimage.metrics import structural_similarity as ssim
 
 class ImageManager:
@@ -17,6 +18,7 @@ class ImageManager:
         right = 400
         bottom = 875
         cropped_image = image[top:bottom, left:right]
+        # ImageManager.show_img(cropped_image)
 
         # 將裁切後的圖片轉為灰度
         gray_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
@@ -30,7 +32,7 @@ class ImageManager:
 
     def extract_character_level(image):
         # 裁切圖片 以下數值為 1920*1080
-        left = 87
+        left = 85
         top = 885
         right = 115
         bottom = 910
@@ -43,6 +45,10 @@ class ImageManager:
         # '--psm 6' 表示單行文本
         config = r'-c tessedit_char_whitelist=0123456789 --psm 6'
         character_level = pytesseract.image_to_string(gray_image, config=config).strip()
+
+        # print('character_level ' + str(character_level))
+        # if(character_level != '85'):
+        #     ImageManager.show_img(cropped_image, gray_image)
 
         return character_level
 
@@ -135,13 +141,16 @@ class ImageManager:
         # '--psm 6' 表示單行文本
         config = r'-c tessedit_char_whitelist=Lv.MmAXx1234567890 --psm 6'
         character_skill_level = pytesseract.image_to_string(gray_image, config=config).strip()
-
+        # print(character_skill_level)
         # 移除Lv.
-        character_skill_level = character_skill_level.replace('L', '').replace('v', '').replace('.', '')
+        character_skill_level = character_skill_level.replace('L', '').replace('v', '').replace('.', '').upper()
 
         # M 判斷常常出問題
-        if 'A' in character_skill_level or 'X' in character_skill_level:
+        if 'M' in character_skill_level or 'A' in character_skill_level or 'X' in character_skill_level:
             return 10
+
+        if character_skill_level == '':
+            return 0
 
         return int(character_skill_level)
 
@@ -257,3 +266,12 @@ class ImageManager:
 
         # cv2.imwrite('output_image.jpg', black_white_image)
         return star_count
+
+    def show_img(original_image, converted_image = None):
+        # 显示原始图像
+        plt.subplot(121), plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)), plt.title('Original Image')
+        # 显示转换后的图像
+        if (converted_image is None):
+            converted_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+        plt.subplot(122), plt.imshow(converted_image, cmap='gray'), plt.title('Converted Image')
+        plt.show()
