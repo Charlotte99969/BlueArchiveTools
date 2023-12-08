@@ -53,18 +53,18 @@ class Character:
                 "ue": self.unique_equipment
             },
             "target": {
-                "level": "85",
-                "ue_level": "0",
-                "bond": "20",
-                "ex": "1",
-                "basic": "1",
-                "passive": "0",
-                "sub": "0",
-                "gear1": "7",
-                "gear2": "7",
-                "gear3": "7",
-                "star": 5,
-                "ue": 3
+                "level": "",
+                "ue_level": "",
+                "bond": "",
+                "ex": "",
+                "basic": "",
+                "passive": "",
+                "sub": "",
+                "gear1": "",
+                "gear2": "",
+                "gear3": "",
+                "star": "",
+                "ue": ""
             },
             "eleph": {
                 "owned": "0",
